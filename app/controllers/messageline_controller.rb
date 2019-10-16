@@ -1,5 +1,5 @@
 class MessagelineController < ApplicationController
-     require 'line/bot'  # gem 'line-bot-api'
+     require 'line/bot'  # gem 'line-bot-api'#何でrequireしてるのかわからない
 
   # callbackアクションのCSRFトークン認証を無効
   protect_from_forgery :except => [:callback]
@@ -30,7 +30,7 @@ class MessagelineController < ApplicationController
             type: 'text',
             text: event.message['text']
           }
-          client.reply_message(event['replyToken'], message)
+          client.reply_message(event['replyToken'], "うんち")
         end
       end
     }
