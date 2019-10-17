@@ -3,10 +3,32 @@ class MessagelineController < ApplicationController
      require 'open-uri'
      require 'nokogiri'
   
-  
-  # callbackアクションのCSRFトークン認証を無効
+   # callbackアクションのCSRFトークン認証を無効
   protect_from_forgery :except => [:callback]
-
+  
+  #nokogiriとopen-uriを利用して横須賀の今日の天気予報を取得する
+  #スクレイピング対象のURL
+  url = "https://tenki.jp/forecast/3/17/4610/14201/"
+  #取得するhtml用charset
+  charset = nil
+ 
+  html = open(url) do |page|
+    #charsetを自動で読み込み、取得
+    charset = page.charset
+    #中身を読む
+    page.read
+  end
+ 
+  # Nokogiri で切り分け
+  contents = Nokogiri::HTML.parse(html,nil,charset)
+ 
+  #CSSセレクタで指定してデータを取得
+  contents.css('#main-column > section > div.forecast-days-wrap.clearfix > section.today-weather > div.weather-wrap.clearfix > div.weather-icon > p').each do |link| 
+  today_forecast = "横須賀市\n今日の天気 #{link.content}" 
+  end
+  
+  
+  
   def client
     @client ||= Line::Bot::Client.new { |config|
       config.channel_secret = ENV["LINE_CHANNEL_SECRET"]
@@ -31,7 +53,7 @@ class MessagelineController < ApplicationController
         when Line::Bot::Event::MessageType::Text
           message = {
             type: 'text',
-            text: 'うんち' #event.message['text']
+            text: '#{today_forecast}' #event.message['text']
           }
           client.reply_message(event['replyToken'], message)
         end
