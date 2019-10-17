@@ -22,10 +22,10 @@ def get_today_forecast
  
   # Nokogiri で切り分け
   contents = Nokogiri::HTML.parse(html,nil,charset)
-  today_forecast = "わかりません"
+  @today_forecast = "わかりません"
   #CSSセレクタで指定してデータを取得
   contents.css('#main-column > section > div.forecast-days-wrap.clearfix > section.today-weather > div.weather-wrap.clearfix > div.weather-icon > p').each do |link| 
-  today_forecast = "横須賀市\n今日の天気 #{link.content}" 
+  @today_forecast = "横須賀市\n今日の天気 #{link.content}" 
   end
 end 
   
@@ -56,7 +56,7 @@ end
         when Line::Bot::Event::MessageType::Text
           message = {
             type: 'text',
-            text: today_forecast #event.message['text']
+            text: @today_forecast #event.message['text']
           }
           client.reply_message(event['replyToken'], message)
         end
