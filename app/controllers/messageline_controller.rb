@@ -21,7 +21,7 @@ class MessagelineController < ApplicationController
  
   # Nokogiri で切り分け
   contents = Nokogiri::HTML.parse(html,nil,charset)
- 
+  today_forecast = "わかりません"
   #CSSセレクタで指定してデータを取得
   contents.css('#main-column > section > div.forecast-days-wrap.clearfix > section.today-weather > div.weather-wrap.clearfix > div.weather-icon > p').each do |link| 
   today_forecast = "横須賀市\n今日の天気 #{link.content}" 
