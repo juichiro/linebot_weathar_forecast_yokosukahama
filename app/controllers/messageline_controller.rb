@@ -7,6 +7,7 @@ class MessagelineController < ApplicationController
   protect_from_forgery :except => [:callback]
   
   #nokogiriとopen-uriを利用して横須賀の今日の天気予報を取得する
+def get_today_forecast
   #スクレイピング対象のURL
   url = "https://tenki.jp/forecast/3/17/4610/14201/"
   #取得するhtml用charset
@@ -26,6 +27,7 @@ class MessagelineController < ApplicationController
   contents.css('#main-column > section > div.forecast-days-wrap.clearfix > section.today-weather > div.weather-wrap.clearfix > div.weather-icon > p').each do |link| 
   today_forecast = "横須賀市\n今日の天気 #{link.content}" 
   end
+end 
   
   
   
@@ -37,6 +39,7 @@ class MessagelineController < ApplicationController
   end
 
   def callback
+    get_today_forecast
     body = request.body.read #リクエストに入っているものを取得している？
 
     signature = request.env['HTTP_X_LINE_SIGNATURE']#リクエストがLINEプラットフォームから送られたものかどうかを検証する。
@@ -53,7 +56,7 @@ class MessagelineController < ApplicationController
         when Line::Bot::Event::MessageType::Text
           message = {
             type: 'text',
-            text: today_forecast #event.message['text']
+            text: '#{today_forecast}' #event.message['text']
           }
           client.reply_message(event['replyToken'], message)
         end
