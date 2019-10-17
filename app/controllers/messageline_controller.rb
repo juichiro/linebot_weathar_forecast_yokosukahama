@@ -12,14 +12,14 @@ class MessagelineController < ApplicationController
   end
 
   def callback
-    body = request.body.read
+    body = request.body.read #リクエストに入っているものを取得している？
 
-    signature = request.env['HTTP_X_LINE_SIGNATURE']
+    signature = request.env['HTTP_X_LINE_SIGNATURE']#リクエストがLINEプラットフォームから送られたものかどうかを検証する。
     unless client.validate_signature(body, signature)
       head :bad_request
     end
 
-    events = client.parse_events_from(body)
+    events = client.parse_events_from(body)#parseだからなんかjsonデータをrubyの形式にしている？
 
     events.each { |event|
       case event
@@ -28,7 +28,7 @@ class MessagelineController < ApplicationController
         when Line::Bot::Event::MessageType::Text
           message = {
             type: 'text',
-            text: event.message['text']
+            text: 'うんち' #event.message['text']
           }
           client.reply_message(event['replyToken'], message)
         end
