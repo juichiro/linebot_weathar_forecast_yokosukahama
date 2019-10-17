@@ -1,6 +1,9 @@
 class MessagelineController < ApplicationController
      require 'line/bot'  # gem 'line-bot-api'#何でrequireしてるのかわからない
-
+     require 'open-uri'
+     require 'nokogiri'
+  
+  
   # callbackアクションのCSRFトークン認証を無効
   protect_from_forgery :except => [:callback]
 
