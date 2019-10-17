@@ -53,7 +53,7 @@ class MessagelineController < ApplicationController
         when Line::Bot::Event::MessageType::Text
           message = {
             type: 'text',
-            text: '#{today_forecast}' #event.message['text']
+            text: today_forecast #event.message['text']
           }
           client.reply_message(event['replyToken'], message)
         end
