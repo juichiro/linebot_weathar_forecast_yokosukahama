@@ -60,10 +60,17 @@ end
       when Line::Bot::Event::Message
         case event.type
         when Line::Bot::Event::MessageType::Text
+          if event.message == "横須賀"
           message = {
             type: 'text',
             text: "#{@today_forecast} #{@highest_temperature} #{@lowest_temperature}" #event.message['text']
           }
+           else 
+          message = {
+            type: 'text',
+            text: '横須賀か横浜と入力してください。'
+          }
+           end
           client.reply_message(event['replyToken'], message)
         end
       end
