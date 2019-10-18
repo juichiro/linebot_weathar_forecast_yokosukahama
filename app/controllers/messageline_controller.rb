@@ -7,7 +7,7 @@ class MessagelineController < ApplicationController
   protect_from_forgery :except => [:callback]
   
   #nokogiriとopen-uriを利用して横須賀の今日の天気予報を取得する
-def get_today_forecast
+def get_today_forecast #天気予報を取得するメソッド
   #スクレイピング対象のURL
   url = "https://tenki.jp/forecast/3/17/4610/14201/"
   #取得するhtml用charset
@@ -22,11 +22,16 @@ def get_today_forecast
  
   # Nokogiri で切り分け
   contents = Nokogiri::HTML.parse(html,nil,charset)
-  @today_forecast = "わかりません"
   #CSSセレクタで指定してデータを取得
   contents.css('#main-column > section > div.forecast-days-wrap.clearfix > section.today-weather > div.weather-wrap.clearfix > div.weather-icon > p').each do |link| 
   @today_forecast = "横須賀市\n今日の天気 #{link.content}" 
   end
+  contents.css('#main-column > section > div.forecast-days-wrap.clearfix > section.today-weather > div.weather-wrap.clearfix > div.date-value-wrap > dl > dd.high-temp.temp > span.value').each do |link|
+  @highest_temperature = "最高気温 #{link.content}度"
+  end 
+  contents.css('#main-column > section > div.forecast-days-wrap.clearfix > section.today-weather > div.weather-wrap.clearfix > div.date-value-wrap > dl > dd.low-temp.temp > span.value').each do |link|
+  @lowest_temperature = "最低気温 #{link.content}度"
+  end 
 end 
   
   
@@ -56,7 +61,7 @@ end
         when Line::Bot::Event::MessageType::Text
           message = {
             type: 'text',
-            text: @today_forecast #event.message['text']
+            text: "#{@today_forecast} #{@highest_temperature} #{@lowest_temperature}" #event.message['text']
           }
           client.reply_message(event['replyToken'], message)
         end
