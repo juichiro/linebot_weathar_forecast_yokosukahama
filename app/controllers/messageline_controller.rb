@@ -3,7 +3,7 @@ class MessagelineController < ApplicationController
      require 'open-uri'
      require 'nokogiri'
   
-  @region = params["event"][0]["message"]["text"]
+  @region = params["events"][0]["message"]["text"]
    # callbackアクションのCSRFトークン認証を無効
   protect_from_forgery :except => [:callback]
   
