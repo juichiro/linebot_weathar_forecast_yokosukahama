@@ -62,7 +62,7 @@ end
         when Line::Bot::Event::MessageType::Text
           message = {
             type: 'text',
-            text: @region #"#{@today_forecast} #{@highest_temperature} #{@lowest_temperature}" #event.message['text']
+            text: "#{@region}です" #"#{@today_forecast} #{@highest_temperature} #{@lowest_temperature}" #event.message['text']
           }
           client.reply_message(event['replyToken'], message)
         end
