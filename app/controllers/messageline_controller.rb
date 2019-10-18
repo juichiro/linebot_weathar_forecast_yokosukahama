@@ -3,7 +3,7 @@ class MessagelineController < ApplicationController
      require 'open-uri'
      require 'nokogiri'
   
-  @region = params["events"][0]["message"]["text"]
+ # @region = params["events"][0]["message"]["text"] postのパラミーターから取得したい
    # callbackアクションのCSRFトークン認証を無効
   protect_from_forgery :except => [:callback]
   
@@ -62,7 +62,7 @@ end
         when Line::Bot::Event::MessageType::Text
           message = {
             type: 'text',
-            text: "#{@region}です" #"#{@today_forecast} #{@highest_temperature} #{@lowest_temperature}" #event.message['text']
+            text: "#{@today_forecast} #{@highest_temperature} #{@lowest_temperature}" #event.message['text']
           }
           client.reply_message(event['replyToken'], message)
         end
